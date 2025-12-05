@@ -1,0 +1,51 @@
+<style> :root{--bg:#f7f8fb;--card:#ffffff;--accent:#0b3d91;--muted:#6b7280;--border:#e6e9ef} body{font-family:Georgia, 'Times New Roman', serif;background:var(--bg);color:#111;margin:0;padding:2rem;} .container{max-width:900px;margin:0 auto;background:var(--card);border:1px solid var(--border);box-shadow:0 6px 18px rgba(11,61,145,0.06);padding:2rem;border-radius:8px} .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem} .header .left{font-size:0.95rem;color:var(--muted)} .header .right{font-size:0.95rem;color:var(--muted)} .title{text-align:center;margin:0 0 1.25rem 0} .title h1{font-family: 'Merriweather', Georgia, serif;color:var(--accent);margin:0;font-size:1.6rem} .meta{text-align:center;color:var(--muted);font-size:0.95rem;margin-bottom:1.25rem} nav.toc{background:#fbfcff;border:1px solid var(--border);padding:1rem;border-radius:6px;margin-bottom:1.25rem} nav.toc a{display:block;color:var(--accent);text-decoration:none;margin:0.35rem 0} section{margin-bottom:1.25rem} h2{color:var(--accent);border-bottom:1px solid var(--border);padding-bottom:0.35rem} p{line-height:1.6;color:#222} pre{background:#0f1724;color:#e6eef8;padding:1rem;border-radius:6px;overflow:auto} code{font-family:Menlo, Monaco, monospace;background:#f3f4f6;padding:0.15rem 0.35rem;border-radius:4px} footer{border-top:1px solid var(--border);padding-top:0.75rem;text-align:center;color:var(--muted);font-size:0.9rem} .example-box{background:#fbfbff;border-left:4px solid var(--accent);padding:0.75rem;border-radius:4px} </style><div class="container"> <header class="header"> <div class="left"><strong>Victor Jerez</strong><br>V28001871</div> <div class="right">05 de Diciembre de 2025</div> </header>
+
+<div class="title"> <h1>Teleprocesos (Informe VI)</h1> </div>
+
+<div class="meta">Orquestación de flujos con Node-RED y n8n</div>
+
+<nav class="toc" aria-label="Índice"> <strong>Índice</strong> <a href="#introduccion">Introducción</a> <a href="#comparativa">Comparativa conceptual</a> <a href="#arquitectura-despliegue">Arquitectura y despliegue</a> <a href="#buenas-practicas">Buenas prácticas de orquestación</a> <a href="#ejemplo">Ejemplo práctico</a> <a href="#conclusiones">Conclusiones</a> </nav>
+
+<section id="introduccion"> <h2>Introducción</h2> <p>La orquestación de flujos es la disciplina que coordina la ejecución de tareas, transformaciones y comunicaciones entre sistemas para cumplir procesos automatizados. En el contexto de teleprocesos, donde confluyen dispositivos, APIs y servicios en la nube, herramientas como <strong>Node-RED</strong> y <strong>n8n</strong> facilitan la definición visual de flujos, la integración de servicios y la gestión de errores, reduciendo la complejidad del desarrollo y acelerando la entrega de soluciones.</p> <p>Este artículo presenta una visión comparativa, aspectos arquitectónicos, buenas prácticas y un ejemplo práctico que ilustra cómo diseñar un flujo de teleprocesos que integre ingestión, transformación y entrega de datos.</p> </section>
+
+<section id="comparativa"> <h2>Comparativa conceptual</h2> <p>Ambas plataformas son de código abierto y permiten orquestar flujos mediante un editor visual, pero su enfoque y fortalezas difieren:</p> <ul> <li><strong>Node-RED</strong> está orientado a IoT y procesamiento en el borde; destaca por su ecosistema de nodos para hardware, protocolos (MQTT, Modbus) y facilidad de despliegue en dispositivos ligeros.</li> <li><strong>n8n</strong> está orientado a la automatización de APIs y procesos empresariales; ofrece integraciones preconstruidas con servicios SaaS, control de credenciales y capacidades para workflows complejos en servidor.</li> </ul> <p>La elección depende del dominio: para teleprocesos con dispositivos y latencia baja, Node-RED suele ser preferible; para orquestación centralizada entre múltiples APIs y servicios empresariales, n8n aporta mayor riqueza de conectores y control de ejecución.</p> </section>
+
+<section id="arquitectura-despliegue"> <h2>Arquitectura y despliegue</h2> <p>Ambas soluciones se despliegan comúnmente en contenedores Docker o directamente sobre Node.js (Node-RED). A continuación se resumen patrones de despliegue habituales:</p> <ul> <li><strong>Edge</strong>: Node-RED en Raspberry Pi o gateways para ingestión local y preprocesamiento; comunicación con la nube mediante MQTT o HTTPS.</li> <li><strong>Centralizado</strong>: n8n en servidor o Kubernetes para ejecutar workflows que integran múltiples APIs, gestionar credenciales y almacenar historiales de ejecución.</li> <li><strong>Híbrido</strong>: combinación de Node-RED en el borde para captura y filtrado, y n8n en la nube para orquestación, enriquecimiento y persistencia.</li> </ul> <p>En todos los casos se recomienda diseñar la orquestación con desacoplamiento entre productores y consumidores, empleando colas o webhooks para pasos de larga duración y evitando bloqueos en el hilo principal de ejecución.</p> </section>
+
+<section id="buenas-practicas"> <h2>Buenas prácticas de orquestación</h2> <ul> <li><strong>Modularidad</strong> Diseñar flujos como unidades reutilizables y parametrizables.</li> <li><strong>Versionado</strong> Exportar y versionar los flujos en control de código (JSON) para trazabilidad.</li> <li><strong>Manejo de errores</strong> Implementar reintentos, circuit breakers y rutas alternativas para fallos.</li> <li><strong>Seguridad</strong> Proteger credenciales con vaults o gestores de secretos; usar TLS y restringir acceso al editor.</li> <li><strong>Observabilidad</strong> Habilitar logs estructurados, métricas y alertas por workflow y por nodo crítico.</li> <li><strong>Pruebas</strong> Validar flujos con datos sintéticos y pruebas de integración antes de producción.</li> </ul> </section>
+
+<section id="ejemplo"> <h2>Ejemplo práctico</h2> <p>Se presenta un caso sencillo de teleprocesos: <em>ingestión de telemetría</em> → <em>transformación</em> → <em>persistencia en base de datos</em> → <em>notificación</em>. Se muestran dos aproximaciones: Node-RED (edge) y n8n (centralizado).</p>
+
+<div class="example-box">
+  <strong>Node-RED</strong>
+  <p>Flujo conceptual:</p>
+  <ol>
+    <li>Entrada MQTT desde dispositivo</li>
+    <li>Node Function para normalizar payload</li>
+    <li>Filtro (switch) para eventos relevantes</li>
+    <li>Salida HTTP request a API central o almacenamiento local</li>
+  </ol>
+  <pre><code>// Ejemplo de Function node (Node-RED)
+
+msg.payload = { deviceId: msg.topic.split('/').pop(), timestamp: new Date().toISOString(), values: JSON.parse(msg.payload) }; return msg; </code></pre> </div>
+
+<div class="example-box" style="margin-top:0.75rem">
+  <strong>n8n</strong>
+  <p>Workflow conceptual:</p>
+  <ol>
+    <li>Webhook trigger que recibe la telemetría</li>
+    <li>Node Function para transformación (JavaScript)</li>
+    <li>Node HTTP Request para persistir en API o base de datos</li>
+    <li>Node Email o Slack para notificación si se cumple condición</li>
+  </ol>
+  <pre><code>// Ejemplo de código en n8n Function node
+
+const data = JSON.parse($json["body"]); return [{ json: { deviceId: data.id, ts: new Date().toISOString(), metrics: data.metrics }}]; </code></pre> </div>
+
+<p>Ambas aproximaciones comparten principios: validar y normalizar datos lo antes posible, desacoplar pasos largos mediante colas o webhooks, y centralizar la lógica crítica en servicios con mayor capacidad de observabilidad.</p>
+
+</section>
+
+<section id="conclusiones"> <h2>Conclusiones</h2> <p>Node-RED y n8n son herramientas complementarias para la orquestación de flujos en teleprocesos. Node-RED aporta ligereza y conectividad con hardware, mientras que n8n facilita integraciones SaaS y gestión de workflows complejos. Un diseño híbrido aprovecha lo mejor de ambos mundos: procesamiento local eficiente y orquestación centralizada robusta.</p> <p>La adopción exitosa requiere disciplina en modularidad, seguridad y observabilidad, así como pruebas y versionado continuos para mantener la calidad y la trazabilidad de los procesos automatizados.</p> </section>
+
+<footer> UNEFA 2025. Inteligencia Artificial </footer> </div>
