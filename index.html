@@ -1,1 +1,208 @@
 
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Teleprocesos (Informe VI)</title>
+  <style>
+    :root{
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --accent: #0b3d91;
+      --muted: #5b616b;
+      --border: #e6e9ef;
+      --maxw: 980px;
+      --radius: 8px;
+      --serif: Georgia, 'Times New Roman', serif;
+      --mono: Menlo, Monaco, monospace;
+    }
+    html,body{height:100%;margin:0;background:var(--bg);font-family:var(--serif);color:#111}
+    .page{max-width:var(--maxw);margin:36px auto;padding:28px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 8px 24px rgba(11,61,145,0.06)}
+    .topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+    .top-left{font-size:0.95rem;color:var(--muted);line-height:1.25}
+    .top-right{font-size:0.95rem;color:var(--muted)}
+    .title-wrap{text-align:center;margin:6px 0 18px 0}
+    .title-wrap h1{margin:0;font-size:1.6rem;color:var(--accent);letter-spacing:0.2px}
+    .subtitle{margin-top:6px;color:var(--muted);font-size:0.95rem}
+    nav.toc{background:#fbfcff;border:1px solid var(--border);padding:14px;border-radius:6px;margin-bottom:18px}
+    nav.toc strong{display:block;color:#222;margin-bottom:6px}
+    nav.toc a{display:block;color:var(--accent);text-decoration:none;margin:6px 0;font-size:0.95rem}
+    section{margin-bottom:18px}
+    h2{color:var(--accent);font-size:1.05rem;margin:0 0 10px 0;padding-bottom:6px;border-bottom:1px solid var(--border)}
+    p{line-height:1.6;color:#222;margin:0 0 10px 0}
+    ul{margin:8px 0 12px 20px;color:#222}
+    li{margin:6px 0}
+    .example{background:#fbfbff;border-left:4px solid var(--accent);padding:12px;border-radius:6px;margin:10px 0}
+    pre{background:#0f1724;color:#e6eef8;padding:12px;border-radius:6px;overflow:auto;font-family:var(--mono);font-size:0.9rem}
+    code{font-family:var(--mono);background:#f3f4f6;padding:0.12rem 0.35rem;border-radius:4px}
+    footer{border-top:1px solid var(--border);padding-top:12px;text-align:center;color:var(--muted);font-size:0.92rem;margin-top:18px}
+    /* Responsive */
+    @media (max-width:640px){
+      .topbar{flex-direction:column;align-items:flex-start}
+      .top-right{margin-top:8px}
+      .title-wrap h1{font-size:1.3rem}
+    }
+  </style>
+</head>
+<body>
+  <article class="page" id="document-root">
+    <header class="topbar" role="banner">
+      <div class="top-left" aria-label="Autor">
+        <strong>Victor Jerez</strong><br />
+        V28001871
+      </div>
+      <div class="top-right" aria-label="Fecha">
+        05 de Diciembre de 2025
+      </div>
+    </header>
+
+    <div class="title-wrap" role="heading" aria-level="1">
+      <h1>Teleprocesos (Informe VI)</h1>
+      <div class="subtitle">Orquestación de flujos con Node‑RED y n8n</div>
+    </div>
+
+    <!-- Índice dinámico: se rellenará con JavaScript -->
+    <nav class="toc" id="toc" aria-label="Índice del documento">
+      <strong>Índice</strong>
+      <div id="toc-list">
+        <!-- Links generados dinámicamente -->
+      </div>
+    </nav>
+
+    <main>
+      <section id="introduccion">
+        <h2>Introducción</h2>
+        <p>La orquestación de flujos coordina la ejecución de tareas, transformaciones y comunicaciones entre sistemas para cumplir procesos automatizados. En teleprocesos, donde convergen dispositivos, APIs y servicios en la nube, herramientas visuales como <strong>Node‑RED</strong> y <strong>n8n</strong> permiten modelar, desplegar y supervisar flujos con mayor rapidez y menor esfuerzo de programación.</p>
+        <p>Este artículo ofrece una visión comparativa, recomendaciones arquitectónicas, buenas prácticas y ejemplos prácticos para diseñar soluciones robustas y mantenibles.</p>
+      </section>
+
+      <section id="comparativa">
+        <h2>Comparativa conceptual</h2>
+        <p>Aunque ambas plataformas comparten la idea de programación por flujos, su orientación difiere:</p>
+        <ul>
+          <li><strong>Node‑RED</strong>: orientado a IoT y procesamiento en el borde; excelente para conectar hardware, protocolos (MQTT, Modbus) y realizar preprocesamiento local.</li>
+          <li><strong>n8n</strong>: orientado a automatización de APIs y procesos empresariales; destaca por integraciones SaaS, gestión de credenciales y control de ejecución en servidor.</li>
+        </ul>
+        <p>La decisión entre una u otra depende del dominio: latencia y conectividad local favorecen Node‑RED; integración centralizada y orquestación de servicios favorecen n8n.</p>
+      </section>
+
+      <section id="arquitectura-despliegue">
+        <h2>Arquitectura y despliegue</h2>
+        <p>Patrones habituales de despliegue:</p>
+        <ul>
+          <li><strong>Edge</strong>: Node‑RED en gateways o Raspberry Pi para ingestión y filtrado local; comunicación con la nube mediante MQTT o HTTPS.</li>
+          <li><strong>Centralizado</strong>: n8n en servidor, contenedor o Kubernetes para ejecutar workflows, gestionar credenciales y almacenar historiales.</li>
+          <li><strong>Híbrido</strong>: Node‑RED en el borde para captura y preprocesamiento; n8n en la nube para orquestación, enriquecimiento y persistencia.</li>
+        </ul>
+        <p>Se recomienda desacoplar productores y consumidores mediante colas o webhooks para evitar bloqueos y permitir reintentos controlados.</p>
+      </section>
+
+      <section id="buenas-practicas">
+        <h2>Buenas prácticas de orquestación</h2>
+        <ul>
+          <li><strong>Modularidad</strong>: diseñar flujos como unidades reutilizables y parametrizables.</li>
+          <li><strong>Versionado</strong>: exportar flujos (JSON) y mantenerlos en control de código para trazabilidad.</li>
+          <li><strong>Manejo de errores</strong>: implementar reintentos, circuit breakers y rutas alternativas.</li>
+          <li><strong>Seguridad</strong>: proteger credenciales con gestores de secretos; usar TLS y restringir acceso al editor.</li>
+          <li><strong>Observabilidad</strong>: logs estructurados, métricas y alertas por workflow y por nodo crítico.</li>
+          <li><strong>Pruebas</strong>: validar con datos sintéticos y pruebas de integración antes de producción.</li>
+        </ul>
+      </section>
+
+      <section id="ejemplo">
+        <h2>Ejemplo práctico</h2>
+        <p>Caso: <em>ingestión de telemetría</em> → <em>transformación</em> → <em>persistencia</em> → <em>notificación</em>. Se muestran dos aproximaciones complementarias.</p>
+
+        <div class="example">
+          <strong>Node‑RED (aproximación edge)</strong>
+          <p>Flujo conceptual:</p>
+          <ol>
+            <li>Entrada MQTT desde dispositivo</li>
+            <li>Function node para normalizar payload</li>
+            <li>Switch node para filtrar eventos relevantes</li>
+            <li>HTTP request o MQTT hacia la API central</li>
+          </ol>
+          <pre><code>// Function node (Node-RED) - normalización simple
+msg.payload = {
+  deviceId: msg.topic.split('/').pop(),
+  timestamp: new Date().toISOString(),
+  values: JSON.parse(msg.payload)
+};
+return msg;
+          </code></pre>
+        </div>
+
+        <div class="example" style="margin-top:10px">
+          <strong>n8n (aproximación centralizada)</strong>
+          <p>Workflow conceptual:</p>
+          <ol>
+            <li>Webhook trigger que recibe la telemetría</li>
+            <li>Function node para transformación (JavaScript)</li>
+            <li>HTTP Request node para persistir en API o base de datos</li>
+            <li>Email/Slack node para notificación si se cumple condición</li>
+          </ol>
+          <pre><code>// Function node (n8n) - transformación
+const data = JSON.parse($json["body"]);
+return [{ json: {
+  deviceId: data.id,
+  ts: new Date().toISOString(),
+  metrics: data.metrics
+}}];
+          </code></pre>
+        </div>
+
+        <p>Notas de diseño:</p>
+        <ul>
+          <li>Validar y normalizar datos lo antes posible.</li>
+          <li>Desacoplar pasos largos con colas (RabbitMQ, Kafka) o webhooks para evitar bloqueos.</li>
+          <li>Registrar metadatos de ejecución para auditoría y trazabilidad.</li>
+        </ul>
+      </section>
+
+      <section id="extensiones">
+        <h2>Extensiones y consideraciones avanzadas</h2>
+        <p>Para entornos productivos y de mayor escala, considere:</p>
+        <ul>
+          <li><strong>Orquestación basada en eventos</strong>: usar sistemas de mensajería para escalar consumidores y balancear carga.</li>
+          <li><strong>Control de versiones y despliegue continuo</strong>: pipelines que validen y desplieguen flujos automáticamente.</li>
+          <li><strong>Políticas de retención y gobernanza</strong>: definir cuánto tiempo se conservan logs y datos sensibles.</li>
+          <li><strong>Pruebas de resiliencia</strong>: simulación de fallos y pruebas de recuperación para validar reintentos y circuit breakers.</li>
+        </ul>
+      </section>
+
+      <section id="conclusiones">
+        <h2>Conclusiones</h2>
+        <p>Node‑RED y n8n son herramientas complementarias: Node‑RED aporta conectividad y eficiencia en el borde; n8n facilita integraciones y control de workflows en la nube. Un enfoque híbrido permite aprovechar lo mejor de ambos mundos, siempre que se apliquen buenas prácticas de modularidad, seguridad y observabilidad.</p>
+      </section>
+    </main>
+
+    <footer role="contentinfo">
+      UNEFA 2025. Inteligencia Artificial
+    </footer>
+  </article>
+
+  <script>
+    // Genera un índice dinámico a partir de los h2 dentro del main
+    (function buildTOC(){
+      const tocList = document.getElementById('toc-list');
+      if(!tocList) return;
+      const headings = document.querySelectorAll('main h2');
+      headings.forEach(h => {
+        const id = h.id || h.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/gi,'-');
+        h.id = id;
+        const a = document.createElement('a');
+        a.href = '#' + id;
+        a.textContent = h.textContent;
+        a.addEventListener('click', function(e){
+          // navegación suave
+          e.preventDefault();
+          document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+          history.replaceState(null, '', '#' + id);
+        });
+        tocList.appendChild(a);
+      });
+    })();
+  </script>
+</body>
+</html>
