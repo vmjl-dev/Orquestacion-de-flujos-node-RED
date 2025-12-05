@@ -256,14 +256,14 @@ footer {
             <li>Switch node para filtrar eventos relevantes</li>
             <li>HTTP request o MQTT hacia la API central</li>
           </ol>
-          <code>// Function node (Node-RED) - normalización simple
+          <reg><code>// Function node (Node-RED) - normalización simple
 msg.payload = {
   deviceId: msg.topic.split('/').pop(),
   timestamp: new Date().toISOString(),
   values: JSON.parse(msg.payload)
 };
 return msg;
-          </code>
+          </code></reg>
         </div>
 
         <div class="example" style="margin-top:10px">
@@ -275,14 +275,14 @@ return msg;
             <li>HTTP Request node para persistir en API o base de datos</li>
             <li>Email/Slack node para notificación si se cumple condición</li>
           </ol>
-         <code>// Function node (n8n) - transformación
+        <reg> <code>// Function node (n8n) - transformación
 const data = JSON.parse($json["body"]);
 return [{ json: {
   deviceId: data.id,
   ts: new Date().toISOString(),
   metrics: data.metrics
 }}];
-          </code>
+          </code></reg>reg>
         </div>
 
         <p>Notas de diseño:</p>
